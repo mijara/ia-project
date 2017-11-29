@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "board.h": "c",
+        "stdlib.h": "c",
+        "feature.h": "c"
+    }
+}

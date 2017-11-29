@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/board.h
+
+/Users/mijara/Projects/ia-project/src/board.c
+board.h
+/Users/mijara/Projects/ia-project/src/board.h
+stdlib.h
+/Users/mijara/Projects/ia-project/src/stdlib.h
+stdio.h
+/Users/mijara/Projects/ia-project/src/stdio.h
+
+/Users/mijara/Projects/ia-project/src/main.c
+stdio.h
+/Users/mijara/Projects/ia-project/src/stdio.h
+board.h
+/Users/mijara/Projects/ia-project/src/board.h
+

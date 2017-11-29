@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/cc  -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Tetris.dir/src/main.c.o CMakeFiles/Tetris.dir/src/board.c.o  -o Tetris 
