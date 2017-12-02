@@ -38,3 +38,21 @@ void board_dump(struct board * self) {
         printf("\n");
     }
 }
+
+void board_purge_ghosts(struct board * self) {
+    for (int x = 0; x < self->width; x++) {
+        for (int y = 0; y < self->height; y++) {
+            board_set(self, x, y, BOARD_BLOCK_EMPTY);
+        }
+    }
+}
+
+int board_line_filled(struct board * self, int y) {
+    int c = self->width;
+
+    for (int x = 0; x < self->width; x++) {
+        c -= board_get(self, x, y) >= BOARD_BLOCK_OCCUPIED;
+    }
+
+    return !c;
+}
