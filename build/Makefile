@@ -177,6 +177,33 @@ src/main.c.s:
 	$(MAKE) -f CMakeFiles/Tetris.dir/build.make CMakeFiles/Tetris.dir/src/main.c.s
 .PHONY : src/main.c.s
 
+src/tabu.o: src/tabu.c.o
+
+.PHONY : src/tabu.o
+
+# target to build an object file
+src/tabu.c.o:
+	$(MAKE) -f CMakeFiles/Tetris.dir/build.make CMakeFiles/Tetris.dir/src/tabu.c.o
+.PHONY : src/tabu.c.o
+
+src/tabu.i: src/tabu.c.i
+
+.PHONY : src/tabu.i
+
+# target to preprocess a source file
+src/tabu.c.i:
+	$(MAKE) -f CMakeFiles/Tetris.dir/build.make CMakeFiles/Tetris.dir/src/tabu.c.i
+.PHONY : src/tabu.c.i
+
+src/tabu.s: src/tabu.c.s
+
+.PHONY : src/tabu.s
+
+# target to generate assembly for a file
+src/tabu.c.s:
+	$(MAKE) -f CMakeFiles/Tetris.dir/build.make CMakeFiles/Tetris.dir/src/tabu.c.s
+.PHONY : src/tabu.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/tabu.o"
+	@echo "... src/tabu.i"
+	@echo "... src/tabu.s"
 .PHONY : help
 
 

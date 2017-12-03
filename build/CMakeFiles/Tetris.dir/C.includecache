@@ -8,6 +8,8 @@
 
 ../include/board.h
 
+../include/tabu.h
+
 /Users/mijara/Projects/ia-project/src/board.c
 board.h
 /Users/mijara/Projects/ia-project/src/board.h
@@ -21,4 +23,16 @@ stdio.h
 /Users/mijara/Projects/ia-project/src/stdio.h
 board.h
 /Users/mijara/Projects/ia-project/src/board.h
+tabu.h
+/Users/mijara/Projects/ia-project/src/tabu.h
+string.h
+/Users/mijara/Projects/ia-project/src/string.h
+
+/Users/mijara/Projects/ia-project/src/tabu.c
+tabu.h
+/Users/mijara/Projects/ia-project/src/tabu.h
+stdio.h
+/Users/mijara/Projects/ia-project/src/stdio.h
+string.h
+/Users/mijara/Projects/ia-project/src/string.h
 

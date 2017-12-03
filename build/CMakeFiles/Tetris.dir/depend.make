@@ -5,5 +5,9 @@ CMakeFiles/Tetris.dir/src/board.c.o: ../include/board.h
 CMakeFiles/Tetris.dir/src/board.c.o: ../src/board.c
 
 CMakeFiles/Tetris.dir/src/main.c.o: ../include/board.h
+CMakeFiles/Tetris.dir/src/main.c.o: ../include/tabu.h
 CMakeFiles/Tetris.dir/src/main.c.o: ../src/main.c
+
+CMakeFiles/Tetris.dir/src/tabu.c.o: ../include/tabu.h
+CMakeFiles/Tetris.dir/src/tabu.c.o: ../src/tabu.c
 

@@ -6,4 +6,8 @@ CMakeFiles/Tetris.dir/src/board.c.o
  /Users/mijara/Projects/ia-project/src/board.c
 CMakeFiles/Tetris.dir/src/main.c.o
  ../include/board.h
+ ../include/tabu.h
  /Users/mijara/Projects/ia-project/src/main.c
+CMakeFiles/Tetris.dir/src/tabu.c.o
+ ../include/tabu.h
+ /Users/mijara/Projects/ia-project/src/tabu.c

@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/mijara/Projects/ia-project/src/board.c" "/Users/mijara/Projects/ia-project/build/CMakeFiles/Tetris.dir/src/board.c.o"
   "/Users/mijara/Projects/ia-project/src/main.c" "/Users/mijara/Projects/ia-project/build/CMakeFiles/Tetris.dir/src/main.c.o"
+  "/Users/mijara/Projects/ia-project/src/tabu.c" "/Users/mijara/Projects/ia-project/build/CMakeFiles/Tetris.dir/src/tabu.c.o"
   )
 set(CMAKE_C_COMPILER_ID "Clang")
 
