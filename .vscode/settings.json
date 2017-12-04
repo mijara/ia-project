@@ -2,6 +2,7 @@
     "files.associations": {
         "board.h": "c",
         "stdlib.h": "c",
-        "feature.h": "c"
+        "feature.h": "c",
+        "tabu_list.h": "c"
     }
 }
