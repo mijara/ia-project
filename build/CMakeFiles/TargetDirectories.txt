@@ -1,3 +1,0 @@
-/Users/mijara/Projects/ia-project/build/CMakeFiles/rebuild_cache.dir
-/Users/mijara/Projects/ia-project/build/CMakeFiles/edit_cache.dir
-/Users/mijara/Projects/ia-project/build/CMakeFiles/Tetris.dir
