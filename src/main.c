@@ -4,7 +4,8 @@
 #include "string.h"
 #include "features.h"
 
-int movement(int state[], int buffer[], int len, int i) {
+int movement(int state[], int buffer[], int len, int i)
+{
     if (i >= len) {
         return 0;
     }
@@ -14,7 +15,8 @@ int movement(int state[], int buffer[], int len, int i) {
     return 1;
 }
 
-int evaluate(int state[], int len) {
+int evaluate(int state[], int len)
+{
     int c = 0;
     c += state[0] * 5;
     c += state[1] * 10;
@@ -24,26 +26,24 @@ int evaluate(int state[], int len) {
     return c;
 }
 
-int should_stop(int iterations) {
+int stop(int iterations)
+{
     return iterations > 10;
 }
 
-int main(int argc, char * argv[]) {
-    /*
+int main(int argc, char * argv[])
+{
     // tabu search usage.
     int initial[5] = { 0, 0, 0, 0, 0 };
     int solution[5];
 
-    struct callbacks cbs;
-    cbs.movement = movement;
-    cbs.evaluate = evaluate;
-    cbs.should_stop = should_stop;
+    struct tabu * tabu = tabu_new(evaluate, movement, stop);
 
-    tabu(initial, solution, 10, cbs, 3);
+    execute(tabu, initial, solution, 5, 3);
 
     printf("found best: %d\n", evaluate(solution, 5));
-    */
 
+    /*
     // board usage.
     struct board * board = board_new(5, 5);
 
@@ -76,6 +76,7 @@ int main(int argc, char * argv[]) {
     printf("cumulative_wells:   %d\n", cumulative_wells(board));
 
     board_free(&board);
+    */
 
     return 0;
 }

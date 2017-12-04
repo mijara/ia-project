@@ -1,14 +1,22 @@
 #ifndef TABU_H
 #define TABU_H
 
-struct callbacks {
-    int (*should_stop)(int iterations);
-    int (*movement)(int state[], int buffer[], int len, int i);
-    int (*evaluate)(int state[], int len);
+typedef int (*tabu_stop)(int iters);
+
+typedef int (*tabu_mov)(int state[], int buffer[], int len, int i);
+
+typedef int (*tabu_eval)(int state[], int len);
+
+struct tabu {
+    tabu_eval evaluate;
+    tabu_mov movement;
+    tabu_stop stop;
 };
 
-struct tabu_list * tabu_list_new();
+struct tabu * tabu_new(tabu_eval evaluate, tabu_mov movement, tabu_stop stop);
 
-void tabu(int initial[], int buffer[], int len, struct callbacks cbs, int tabu_size);
+void tabu_free(struct tabu ** self);
+
+void execute(struct tabu * self, int initial[], int buffer[], int state_len, int tabu_size);
 
 #endif // TABU_H

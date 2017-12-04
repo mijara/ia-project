@@ -3,6 +3,7 @@
         "board.h": "c",
         "stdlib.h": "c",
         "feature.h": "c",
-        "tabu_list.h": "c"
+        "tabu_list.h": "c",
+        "stdio.h": "c"
     }
 }

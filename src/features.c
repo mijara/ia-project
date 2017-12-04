@@ -1,6 +1,7 @@
 #include "features.h"
 
-int landing_height(struct board * board) {
+int landing_height(struct board * board)
+{
     // TODO: should optimize this...
     int height = board->height + 1;
 
@@ -15,7 +16,8 @@ int landing_height(struct board * board) {
     return height;
 }
 
-int eroded_piece_cells(struct board * board) {
+int eroded_piece_cells(struct board * board)
+{
     int eroded_lines = 0;
     int eroded_cells = 0;
 
@@ -34,7 +36,8 @@ int eroded_piece_cells(struct board * board) {
     return eroded_lines * eroded_cells;
 }
 
-int holes(struct board * board) {
+int holes(struct board * board)
+{
     int count = 0;
 
     for (int x = 0; x < board->width; x++) {
@@ -50,7 +53,8 @@ int holes(struct board * board) {
     return count;
 }
 
-int row_transitions(struct board * board) {
+int row_transitions(struct board * board)
+{
     int sum = 0;
 
     for (int j = 0; j < board->height; j++) {
@@ -74,7 +78,8 @@ int row_transitions(struct board * board) {
     return sum;
 }
 
-int column_transitions(struct board * board) {
+int column_transitions(struct board * board)
+{
     int sum = 0;
 
     for (int i = 0; i < board->width; i++) {
@@ -95,11 +100,13 @@ int column_transitions(struct board * board) {
     return sum;
 }
 
-int _arithmetic_sum(int n) {
+int _arithmetic_sum(int n)
+{
     return n < 0 ? 0 : n * (n + 1) / 2;
 }
 
-int cumulative_wells(struct board * board) {
+int cumulative_wells(struct board * board)
+{
     int sum = 0;
 
     // check the left-most column.
