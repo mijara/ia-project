@@ -2,56 +2,8 @@
 #include "board.h"
 #include "tabu.h"
 #include "string.h"
-
-int landing_height(struct board * board) {
-    // TODO: should optimize this...
-    int height = board->height + 1;
-
-    for (int x = 0; x < board->width; x++) {
-        for (int y = 0; y < board->height; y++) {
-            if (board_get(board, x, y) == BOARD_BLOCK_GHOST && y < height) {
-                height = y;
-            }
-        }
-    }
-
-    return height;
-}
-
-int eroded_piece_cells(struct board * board) {
-    int eroded_lines = 0;
-    int eroded_cells = 0;
-
-    for (int y = 0; y < board->height; y++) {
-        int eroded = board_line_filled(board, y);
-
-        eroded_lines += eroded;
-
-        if (eroded) {
-            for (int x = 0; x < board->width; x++) {
-                eroded_cells += board_get(board, x, y) == BOARD_BLOCK_GHOST;
-            }
-        }
-    }
-
-    return eroded_lines * eroded_cells;
-}
-
-int holes(struct board * board) {
-    int count = 0;
-
-    for (int x = 0; x < board->width; x++) {
-        for (int y = 0; y < board->height - 1; y++) {
-            if (board_get(board, x, y) == BOARD_BLOCK_EMPTY) {
-                if (board_get(board, x, y + 1) >= BOARD_BLOCK_OCCUPIED) {
-                    count++;
-                }
-            }
-        }
-    }
-
-    return count;
-}
+#include "features.h"
+#include "tabu_list.h"
 
 int movement(int state[], int buffer[], int len, int i) {
     if (i >= len) {
@@ -78,7 +30,29 @@ int should_stop(int iterations) {
 }
 
 int main(int argc, char * argv[]) {
-    int initial[5] = { 0, 0, 0, 0, 0};
+    int state1[5] = { 1, 0, 0, 0, 0 };
+    int state2[5] = { 0, 1, 0, 0, 0 };
+    int state3[5] = { 0, 0, 1, 0, 0 };
+    int state4[5] = { 0, 0, 0, 1, 0 };
+    int state5[5] = { 0, 0, 0, 1, 1 };
+
+    struct tabu_list * list = tabu_list_new(3, 5);
+    tabu_list_insert(list, state1);
+    tabu_list_insert(list, state2);
+    tabu_list_insert(list, state3);
+    tabu_list_insert(list, state4);
+    tabu_list_insert(list, state5);
+
+    printf("1 %d\n", tabu_list_contains(list, state1));
+    printf("2 %d\n", tabu_list_contains(list, state2));
+    printf("3 %d\n", tabu_list_contains(list, state3));
+    printf("4 %d\n", tabu_list_contains(list, state4));
+    printf("5 %d\n", tabu_list_contains(list, state5));
+
+    tabu_list_free(&list);
+
+    /*
+    int initial[5] = { 0, 0, 0, 0, 0 };
     int solution[5];
 
     struct callbacks cbs;
@@ -89,6 +63,7 @@ int main(int argc, char * argv[]) {
     tabu(initial, solution, 10, cbs, 3);
 
     printf("found best: %d\n", evaluate(solution, 5));
+    */
 
     /*
     struct board * board = board_new(5, 5);
@@ -100,10 +75,9 @@ int main(int argc, char * argv[]) {
 
     board_set(board, 4, 0, BOARD_BLOCK_OCCUPIED);
     board_set(board, 4, 1, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 4, 2, BOARD_BLOCK_OCCUPIED);
+    board_set(board, 3, 2, BOARD_BLOCK_OCCUPIED);
     board_set(board, 4, 3, BOARD_BLOCK_OCCUPIED);
 
-    board_set(board, 1, 1, BOARD_BLOCK_GHOST);
     board_set(board, 2, 1, BOARD_BLOCK_GHOST);
     board_set(board, 3, 1, BOARD_BLOCK_GHOST);
     board_set(board, 3, 0, BOARD_BLOCK_GHOST);
@@ -111,12 +85,19 @@ int main(int argc, char * argv[]) {
     board_set(board, 2, 3, BOARD_BLOCK_OCCUPIED);
     board_set(board, 3, 3, BOARD_BLOCK_OCCUPIED);
 
+    printf("\n");
     board_dump(board);
+    printf("\n");
 
-    printf("landing_height: %d\n", landing_height(board));
+    printf("landing_height:     %d\n", landing_height(board));
     printf("eroded_piece_cells: %d\n", eroded_piece_cells(board));
-    printf("holes: %d\n", holes(board));
+    printf("holes:              %d\n", holes(board));
+    printf("row_transitions:    %d\n", row_transitions(board));
+    printf("column_transitions: %d\n", column_transitions(board));
+    printf("cumulative_wells:   %d\n", cumulative_wells(board));
 
     board_free(&board);
     */
+
+    return 0;
 }

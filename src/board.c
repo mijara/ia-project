@@ -30,12 +30,26 @@ inline int board_get(struct board * self, int x, int y) {
     return self->blocks[y * self->width + x];
 }
 
+inline int board_is_occupied(struct board * self, int x, int y) {
+    int cell = self->blocks[y * self->width + x];
+    if (cell == BOARD_BLOCK_GHOST || cell == BOARD_BLOCK_OCCUPIED) {
+        return BOARD_BLOCK_OCCUPIED;
+    }
+    return BOARD_BLOCK_EMPTY;
+}
+
 void board_dump(struct board * self) {
     for (int y = self->height - 1; y >= 0; y--) {
+        printf("|");
         for (int x = 0; x < self->width; x++) {
-            printf("%d", board_get(self, x, y));
+            int v = board_get(self, x, y);
+            if (v == 0) {
+                printf(" ");
+            } else {
+                printf("%d", board_get(self, x, y));
+            }
         }
-        printf("\n");
+        printf("|\n");
     }
 }
 
@@ -47,7 +61,7 @@ void board_purge_ghosts(struct board * self) {
     }
 }
 
-int board_line_filled(struct board * self, int y) {
+int board_is_row_filled(struct board * self, int y) {
     int c = self->width;
 
     for (int x = 0; x < self->width; x++) {
@@ -55,4 +69,16 @@ int board_line_filled(struct board * self, int y) {
     }
 
     return !c;
+}
+
+int board_column_height(struct board * self, int x) {
+    int max_height = 0;
+
+    for (int y = 0; y < self->height; y++) {
+        if (board_is_occupied(self, x, y)) {
+            max_height = y;
+        }
+    }
+
+    return max_height + 1;
 }

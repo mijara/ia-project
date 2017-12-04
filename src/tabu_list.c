@@ -25,13 +25,18 @@ struct tabu_list * tabu_list_new(int capacity, int state_length) {
     return self;
 }
 
+void tabu_list_free(struct tabu_list ** self) {
+    free(*self);
+    *self = NULL;
+}
+
 void tabu_list_insert(struct tabu_list * self, int state[]) {
     int byte_size = self->state_length * sizeof(int);
     memcpy(&self->list[self->index * self->state_length], state, byte_size);
     self->index = (self->index + 1) % self->capacity;
 }
 
-int list_contains(struct tabu_list * self, int state[]) {
+int tabu_list_contains(struct tabu_list * self, int state[]) {
     for (int i = 0; i < self->capacity; i++) {
         if (_state_equals(&self->list[i * self->state_length], state, self->state_length)) {
             return 1;
@@ -39,8 +44,4 @@ int list_contains(struct tabu_list * self, int state[]) {
     }
 
     return 0;
-}
-
-void list_insert(int * list[], int state[], int len, int index) {
-    memcpy(list[index], state, len * sizeof(int));
 }

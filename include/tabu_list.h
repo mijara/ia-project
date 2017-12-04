@@ -9,6 +9,11 @@ struct tabu_list {
 };
 
 struct tabu_list * tabu_list_new(int capacity, int state_length);
+
+void tabu_list_free(struct tabu_list ** self);
+
 void tabu_list_insert(struct tabu_list * self, int state[]);
+
+int tabu_list_contains(struct tabu_list * self, int state[]);
 
 #endif // TABU_LIST_H
