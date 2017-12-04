@@ -26,8 +26,11 @@ void tabu(
     int state[],
     int buffer[],
     int len,
-    struct callbacks cbs
+    struct callbacks cbs,
+    int tabu_size
 ) {
+    int list_index = 0;
+
     int best_solution[len];
     int best_fitness = cbs.evaluate(state, len);
 
@@ -37,6 +40,10 @@ void tabu(
         int best_neighbour[len];
         int fitness = _best_neighbour(state, best_neighbour, len, cbs);
         memcpy(state, best_neighbour, len * sizeof(int));
+
+        // insert to tabu list.
+        // _list_insert(list, state, len, list_index);
+        // list_index = (list_index + 1) % list_size;
 
         // if the best neightbour has a better fitness than the best fitness till now, replace.
         if (fitness > best_fitness) {

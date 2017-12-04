@@ -86,7 +86,7 @@ int main(int argc, char * argv[]) {
     cbs.evaluate = evaluate;
     cbs.should_stop = should_stop;
 
-    tabu(initial, solution, 10, cbs);
+    tabu(initial, solution, 10, cbs, 3);
 
     printf("found best: %d\n", evaluate(solution, 5));
 
