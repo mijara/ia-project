@@ -76,4 +76,6 @@ void execute(struct tabu * self, int state[], int buffer[], int state_len,
     }
 
     memcpy(buffer, best_solution, state_len * sizeof(int));
+
+    tabu_list_free(&tabu_list);
 }

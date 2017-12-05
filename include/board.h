@@ -1,11 +1,14 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "piece.h"
+
 #define BOARD_BLOCK_EMPTY 0
 #define BOARD_BLOCK_OCCUPIED 1
 #define BOARD_BLOCK_GHOST 2
 
-struct board {
+struct board 
+{
     int width;
     int height;
     int blocks[];
@@ -50,6 +53,11 @@ void board_dump(struct board * self);
 void board_purge_ghosts(struct board * self);
 
 /**
+ * Materializes all ghosts, turning them into occupied cells.
+ */
+int board_embrace_ghosts(struct board * self);
+
+/**
  * Returns 1 if the row is filled with occupied and ghosts board cells.
  */
 int board_is_row_filled(struct board * self, int y);
@@ -58,5 +66,13 @@ int board_is_row_filled(struct board * self, int y);
  * Returns the height of the column.
  */
 int board_column_height(struct board * self, int x);
+
+/**
+ * Returns the height at which the piece will first collide with the
+ * board. The piece shall be placed at this height.
+ */
+int board_collission_height(struct board * self, struct piece * piece, int x);
+
+void board_place_piece(struct board * self, struct piece * piece, int x, int y);
 
 #endif // BOARD_H

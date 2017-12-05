@@ -1,7 +1,8 @@
 #ifndef TABU_LIST_H
 #define TABU_LIST_H
 
-struct tabu_list {
+struct tabu_list 
+{
     int index;
     int capacity;
     int state_length;

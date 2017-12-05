@@ -9,6 +9,7 @@ set(SOURCE_FILES
     src/tabu.c
     src/tabu_list.c
     src/features.c
+    src/piece.c
 )
 
 add_executable(Tetris src/main.c ${SOURCE_FILES})

@@ -7,7 +7,8 @@ typedef int (*tabu_mov)(int state[], int buffer[], int len, int i);
 
 typedef int (*tabu_eval)(int state[], int len);
 
-struct tabu {
+struct tabu
+{
     tabu_eval evaluate;
     tabu_mov movement;
     tabu_stop stop;

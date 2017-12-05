@@ -2,7 +2,6 @@
 
 int landing_height(struct board * board)
 {
-    // TODO: should optimize this...
     int height = board->height + 1;
 
     for (int x = 0; x < board->width; x++) {
@@ -12,6 +11,9 @@ int landing_height(struct board * board)
             }
         }
     }
+    
+    // NOTE: the return value when there's no GHOST pieces will be
+    // height + 1.
 
     return height;
 }

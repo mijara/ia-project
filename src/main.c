@@ -3,6 +3,21 @@
 #include "tabu.h"
 #include "string.h"
 #include "features.h"
+#include "piece.h"
+
+#include <time.h>
+#include <stdlib.h>
+
+int evaluate_board(struct board * board, int state[]) {
+    int sum = 0;
+    sum += state[0] * landing_height(board);
+    sum += state[1] * eroded_piece_cells(board);
+    sum += state[2] * holes(board);
+    sum += state[3] * row_transitions(board);
+    sum += state[4] * column_transitions(board);
+    sum += state[5] * cumulative_wells(board);
+    return sum;
+}
 
 int movement(int state[], int buffer[], int len, int i)
 {
@@ -33,6 +48,16 @@ int stop(int iterations)
 
 int main(int argc, char * argv[])
 {
+    srand(time(NULL));
+
+    int pieces_count = 8;
+    int pieces[] = {
+        6, 3, 5, 6, 2, 3, 1, 2
+    };
+
+    int weights[] = { -1, 1, -1, -1, -4, -1 };
+
+    /*
     // tabu search usage.
     int initial[5] = { 0, 0, 0, 0, 0 };
     int solution[5];
@@ -42,41 +67,70 @@ int main(int argc, char * argv[])
     execute(tabu, initial, solution, 5, 3);
 
     printf("found best: %d\n", evaluate(solution, 5));
+    */
 
-    /*
-    // board usage.
-    struct board * board = board_new(5, 5);
+    struct board * board = board_new(10, 20);
+    int filled = 0;
 
-    board_set(board, 0, 0, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 1, 0, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 2, 0, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 0, 1, BOARD_BLOCK_OCCUPIED);
+    struct piece * piece;
+    for (int p = 0; p < 1000; p++) {
+        int type = rand() % 7;
 
-    board_set(board, 4, 0, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 4, 1, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 3, 2, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 4, 3, BOARD_BLOCK_OCCUPIED);
+        piece = piece_new(type);
 
-    board_set(board, 2, 1, BOARD_BLOCK_GHOST);
-    board_set(board, 3, 1, BOARD_BLOCK_GHOST);
-    board_set(board, 3, 0, BOARD_BLOCK_GHOST);
+        int first = 1;
+        int best_fitness = 0;
+        int best_position = 0;
+        int best_rotation = 0;
 
-    board_set(board, 2, 3, BOARD_BLOCK_OCCUPIED);
-    board_set(board, 3, 3, BOARD_BLOCK_OCCUPIED);
+        for (int r = 0; r < piece_rotation_count(piece); r++) {
+            piece_rotate(piece);
 
-    printf("\n");
+            for (int x = 0; x < board->width - piece_width(piece) + 1; x++) {
+                int y = board_collission_height(board, piece, x);
+
+                // ignore solution if the piece will overflow the board.
+                if (y > board->height - piece_height(piece)) {
+                    continue;
+                }
+
+                board_place_piece(board, piece, x, y);
+
+                // calculate fitness of the board.
+                int fitness = evaluate_board(board, weights);
+
+                if (fitness >= best_fitness || first == 1) {
+                    first = 0;
+                    best_fitness = fitness;
+                    best_position = x;
+                    best_rotation = r;
+                }
+
+                board_purge_ghosts(board);
+            }
+        }
+
+        piece_free(&piece);
+
+        if (first == 0) {
+            // get best piece and place it in the board, embracing it for the
+            // new state.
+            piece = piece_new_with_rotation(type, best_rotation);
+            int y = board_collission_height(board, piece, best_position);
+            board_place_piece(board, piece, best_position, y);
+            filled += board_embrace_ghosts(board);
+            piece_free(&piece);
+        } else {
+            // in this case we didn't found any place to put the piece
+            // without overflowing the board, terminate.
+            break;
+        }
+    }
+
     board_dump(board);
-    printf("\n");
-
-    printf("landing_height:     %d\n", landing_height(board));
-    printf("eroded_piece_cells: %d\n", eroded_piece_cells(board));
-    printf("holes:              %d\n", holes(board));
-    printf("row_transitions:    %d\n", row_transitions(board));
-    printf("column_transitions: %d\n", column_transitions(board));
-    printf("cumulative_wells:   %d\n", cumulative_wells(board));
+    printf("%d\n", filled);
 
     board_free(&board);
-    */
 
     return 0;
 }
