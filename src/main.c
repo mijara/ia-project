@@ -1,12 +1,15 @@
-#include "stdio.h"
-#include "board.h"
-#include "tabu.h"
-#include "string.h"
-#include "features.h"
-#include "piece.h"
-
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include <stdlib.h>
+
+#include "board.h"
+#include "tabu.h"
+#include "features.h"
+#include "piece.h"
+#include "input.h"
+
+#define DEBUG
 
 int evaluate_board(struct board * board, int state[]) {
     int sum = 0;
@@ -57,6 +60,9 @@ int main(int argc, char * argv[])
 
     int weights[] = { -1, 1, -1, -1, -4, -1 };
 
+    struct input * input = input_read("../instances/7_12_15.txt");
+    input_free(&input);
+
     /*
     // tabu search usage.
     int initial[5] = { 0, 0, 0, 0, 0 };
@@ -69,6 +75,7 @@ int main(int argc, char * argv[])
     printf("found best: %d\n", evaluate(solution, 5));
     */
 
+    /*
     struct board * board = board_new(10, 20);
     int filled = 0;
 
@@ -131,6 +138,7 @@ int main(int argc, char * argv[])
     printf("%d\n", filled);
 
     board_free(&board);
+    */
 
     return 0;
 }
