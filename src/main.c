@@ -11,7 +11,9 @@
 
 #define DEBUG
 
-int evaluate_board(struct board * board, int state[]) {
+struct input * input;
+
+int evaluate_board(struct board * board, int state[], int len) {
     int sum = 0;
     sum += state[0] * landing_height(board);
     sum += state[1] * eroded_piece_cells(board);
@@ -28,60 +30,23 @@ int movement(int state[], int buffer[], int len, int i)
         return 0;
     }
 
-    memcpy(buffer, state, len * sizeof(int));
-    buffer[i] = !buffer[i];
+    for (int j = 0; j < len; j++) {
+        buffer[j] = state[j];
+    }
+
+    buffer[i] = buffer[i] + rand() % 10 - 5;
+
     return 1;
 }
 
 int evaluate(int state[], int len)
 {
-    int c = 0;
-    c += state[0] * 5;
-    c += state[1] * 10;
-    c += state[2] * 8;
-    c += state[3] * 15;
-    c += state[4] * 2;
-    return c;
-}
-
-int stop(int iterations)
-{
-    return iterations > 10;
-}
-
-int main(int argc, char * argv[])
-{
-    srand(time(NULL));
-
-    int pieces_count = 8;
-    int pieces[] = {
-        6, 3, 5, 6, 2, 3, 1, 2
-    };
-
-    int weights[] = { -1, 1, -1, -1, -4, -1 };
-
-    struct input * input = input_read("../instances/7_12_15.txt");
-    input_free(&input);
-
-    /*
-    // tabu search usage.
-    int initial[5] = { 0, 0, 0, 0, 0 };
-    int solution[5];
-
-    struct tabu * tabu = tabu_new(evaluate, movement, stop);
-
-    execute(tabu, initial, solution, 5, 3);
-
-    printf("found best: %d\n", evaluate(solution, 5));
-    */
-
-    /*
-    struct board * board = board_new(10, 20);
-    int filled = 0;
+    struct board * board = board_new(input->width, input->height);
+    int lines_filled = 0;
 
     struct piece * piece;
-    for (int p = 0; p < 1000; p++) {
-        int type = rand() % 7;
+    for (int p = 0; p < input->n_pieces; p++) {
+        int type = input->pieces[p];
 
         piece = piece_new(type);
 
@@ -104,7 +69,7 @@ int main(int argc, char * argv[])
                 board_place_piece(board, piece, x, y);
 
                 // calculate fitness of the board.
-                int fitness = evaluate_board(board, weights);
+                int fitness = evaluate_board(board, state, len);
 
                 if (fitness >= best_fitness || first == 1) {
                     first = 0;
@@ -125,7 +90,7 @@ int main(int argc, char * argv[])
             piece = piece_new_with_rotation(type, best_rotation);
             int y = board_collission_height(board, piece, best_position);
             board_place_piece(board, piece, best_position, y);
-            filled += board_embrace_ghosts(board);
+            lines_filled += board_embrace_ghosts(board);
             piece_free(&piece);
         } else {
             // in this case we didn't found any place to put the piece
@@ -134,11 +99,37 @@ int main(int argc, char * argv[])
         }
     }
 
-    board_dump(board);
-    printf("%d\n", filled);
-
     board_free(&board);
-    */
+
+    return lines_filled;
+}
+
+int stop(int iterations)
+{
+    printf("iteration %d.\n", iterations + 1);
+    return iterations >= 20 - 1;
+}
+
+int main(int argc, char * argv[])
+{
+    // this program is just pseudo random, since the seed is actually the same everytime.
+    srand(1);
+
+    input = input_read(argv[1]);
+
+    // tabu search usage.
+    int initial[6] = { 0, 0, 0, 0, 0, 0 };
+    int solution[6];
+
+    struct tabu * tabu = tabu_new(evaluate, movement, stop);
+
+    int best_fitness = execute(tabu, initial, solution, 6, 5);
+
+    printf("lines cleared: %d\n", best_fitness);
+    printf("weights: %d, %d, %d, %d, %d, %d\n", solution[0], solution[1], solution[2], solution[3], solution[4], solution[5]);
+
+    tabu_free(&tabu);
+    input_free(&input);
 
     return 0;
 }

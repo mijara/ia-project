@@ -98,6 +98,10 @@ int board_embrace_ghosts(struct board * self)
                     board_set(self, x, j - 1, board_get(self, x, j));
                 }
             }
+
+            for (int x = 0; x < self->width; x++) {
+                board_set(self, x, self->height - 1, 0);
+            }
         }
     }
 

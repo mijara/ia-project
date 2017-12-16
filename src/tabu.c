@@ -28,18 +28,19 @@ int _best_neighbour(struct tabu * self, int state[], int best_neighbour[], int l
     int best_fitness = 0;
 
     int buffer[len];
+
     while (self->movement(state, buffer, len, i++)) {
         int fitness = self->evaluate(buffer, len);
-        printf("fitness: %d\n", fitness);
+        // printf("fitness: %d\n", fitness);
 
         if (tabu_list_contains(tabu_list, buffer)) {
-            printf("  ignored\n");
+            // printf("  ignored\n");
             continue;
         }
 
-        if (fitness > best_fitness) {
+        if (fitness >= best_fitness) {
             best_fitness = fitness;
-            printf("  new best.\n");
+            // printf("  new best.\n");
 
             memcpy(best_neighbour, buffer, len * sizeof(int));
         }
@@ -48,12 +49,13 @@ int _best_neighbour(struct tabu * self, int state[], int best_neighbour[], int l
     return best_fitness;
 }
 
-void execute(struct tabu * self, int state[], int buffer[], int state_len, 
+int execute(struct tabu * self, int state[], int buffer[], int state_len, 
         int tabu_size)
 {
     struct tabu_list * tabu_list = tabu_list_new(tabu_size, state_len);
 
     int best_solution[state_len];
+    memcpy(best_solution, state, state_len * sizeof(int));
     int best_fitness = self->evaluate(state, state_len);
 
     int i = 0;
@@ -69,13 +71,17 @@ void execute(struct tabu * self, int state[], int buffer[], int state_len,
 
         // if the neightbour has a better fitness than the best fitness till 
         // now, replace.
-        if (fitness > best_fitness) {
+        if (fitness >= best_fitness) {
             best_fitness = fitness;
             memcpy(best_solution, best_neighbour, state_len * sizeof(int));
         }
+        
+        // printf("weights: %d, %d, %d, %d, %d, %d\n", best_solution[0], best_solution[1], best_solution[2], best_solution[3], best_solution[4], best_solution[5]);
     }
 
     memcpy(buffer, best_solution, state_len * sizeof(int));
 
     tabu_list_free(&tabu_list);
+
+    return best_fitness;
 }

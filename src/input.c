@@ -41,6 +41,7 @@ void _read_pieces(FILE * file, struct input * self)
 {
     for (int i = 0; i < self->n_pieces; i++) {
         fscanf(file, "%d", &self->pieces[i]);
+        self->pieces[i]--;
     }
 
     #ifdef DEBUG

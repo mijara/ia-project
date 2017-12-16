@@ -43,11 +43,11 @@ int holes(struct board * board)
     int count = 0;
 
     for (int x = 0; x < board->width; x++) {
-        for (int y = 0; y < board->height - 1; y++) {
-            if (!board_is_occupied(board, x, y)) {
-                if (board_is_occupied(board, x, y + 1)) {
-                    count++;
-                }
+        int height = board_column_height(board, x);
+
+        for (int y = 0; y < height - 1; y++) {
+            if (!board_is_occupied(board, x, y) && y < height - 1) {
+                count++;
             }
         }
     }
