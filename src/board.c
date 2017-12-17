@@ -2,6 +2,8 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+#define DELETE_LINES 0
+
 struct board * board_new(int width, int height)
 {
     struct board * self = malloc(
@@ -88,21 +90,25 @@ int board_embrace_ghosts(struct board * self)
 
     int filled = 0;
 
-    // remove filled lines.
-    for (int y = self->height - 1; y >= 0; y--) {
-        if (board_is_row_filled(self, y)) {
-            filled++;
-            // move rows above to one below.
-            for (int j = y + 1; j < self->height; j++) {
+    if (DELETE_LINES) {
+        // remove filled lines.
+        for (int y = self->height - 1; y >= 0; y--) {
+            if (board_is_row_filled(self, y)) {
+                filled++;
+                // move rows above to one below.
+                for (int j = y + 1; j < self->height; j++) {
+                    for (int x = 0; x < self->width; x++) {
+                        board_set(self, x, j - 1, board_get(self, x, j));
+                    }
+                }
+
                 for (int x = 0; x < self->width; x++) {
-                    board_set(self, x, j - 1, board_get(self, x, j));
+                    board_set(self, x, self->height - 1, 0);
                 }
             }
-
-            for (int x = 0; x < self->width; x++) {
-                board_set(self, x, self->height - 1, 0);
-            }
         }
+    } else {
+        filled = -1;
     }
 
     return filled;

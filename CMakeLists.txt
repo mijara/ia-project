@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
+set(CMAKE_C_FLAGS "-std=c99")
+
 project (Tetris)
 
 include_directories(include)
@@ -14,3 +16,4 @@ set(SOURCE_FILES
 )
 
 add_executable(Tetris src/main.c ${SOURCE_FILES})
+set_property(TARGET Tetris PROPERTY C_STANDARD 99)
