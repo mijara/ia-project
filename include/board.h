@@ -9,8 +9,17 @@
 
 struct board 
 {
+    int uid;
     int width;
     int height;
+
+    // ghosts optimizations.
+    int ghost_min_x_prev;
+    int ghost_max_x_prev;
+    int ghost_min_x;
+    int ghost_max_x;
+    int ghosts[8];
+
     int blocks[];
 };
 
@@ -73,6 +82,6 @@ int board_column_height(struct board * self, int x);
  */
 int board_collission_height(struct board * self, struct piece * piece, int x);
 
-void board_place_piece(struct board * self, struct piece * piece, int x, int y);
+void board_place_piece(struct board * self, struct piece * piece, int x, int y, int update_ghosts);
 
 #endif // BOARD_H

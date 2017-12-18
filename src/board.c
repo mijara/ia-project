@@ -1,16 +1,23 @@
 #include "board.h"
-#include "stdlib.h"
-#include "stdio.h"
 
-#define DELETE_LINES 0
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
 
 struct board * board_new(int width, int height)
 {
+    static int id = 0;
+
     struct board * self = malloc(
         sizeof(struct board) + sizeof(int) * width * height);
 
     self->width = width;
     self->height = height;
+    self->ghost_min_x_prev = 0;
+    self->ghost_max_x_prev = 0;
+    self->ghost_min_x = 0;
+    self->ghost_max_x = 0;
+    self->uid = id++;
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -59,8 +66,10 @@ void board_dump(struct board * self)
             int v = board_get(self, x, y);
             if (v == 0) {
                 printf(" ");
-            } else {
-                printf("%d", board_get(self, x, y));
+            } else if (v == BOARD_BLOCK_OCCUPIED) {
+                printf("#");
+            } else if (v == BOARD_BLOCK_GHOST) {
+                printf("@");
             }
         }
         printf("|\n");
@@ -69,12 +78,11 @@ void board_dump(struct board * self)
 
 void board_purge_ghosts(struct board * self)
 {
-    for (int x = 0; x < self->width; x++) {
-        for (int y = 0; y < self->height; y++) {
-            if (board_get(self, x, y) == BOARD_BLOCK_GHOST) {
-                board_set(self, x, y, BOARD_BLOCK_EMPTY);
-            }
-        }
+    for (int i = 0; i < 4; i++) {
+        int x = self->ghosts[i * 2];
+        int y = self->ghosts[i * 2 + 1];
+
+        board_set(self, x, y, BOARD_BLOCK_EMPTY);
     }
 }
 
@@ -90,26 +98,26 @@ int board_embrace_ghosts(struct board * self)
 
     int filled = 0;
 
-    if (DELETE_LINES) {
-        // remove filled lines.
-        for (int y = self->height - 1; y >= 0; y--) {
-            if (board_is_row_filled(self, y)) {
-                filled++;
-                // move rows above to one below.
-                for (int j = y + 1; j < self->height; j++) {
-                    for (int x = 0; x < self->width; x++) {
-                        board_set(self, x, j - 1, board_get(self, x, j));
-                    }
-                }
-
+    #ifndef KEEP_LINES
+    // remove filled lines.
+    for (int y = self->height - 1; y >= 0; y--) {
+        if (board_is_row_filled(self, y)) {
+            filled++;
+            // move rows above to one below.
+            for (int j = y + 1; j < self->height; j++) {
                 for (int x = 0; x < self->width; x++) {
-                    board_set(self, x, self->height - 1, 0);
+                    board_set(self, x, j - 1, board_get(self, x, j));
                 }
             }
+
+            for (int x = 0; x < self->width; x++) {
+                board_set(self, x, self->height - 1, 0);
+            }
         }
-    } else {
-        filled = -1;
     }
+    #else
+    filled = -1;
+    #endif
 
     return filled;
 }
@@ -127,15 +135,13 @@ int board_is_row_filled(struct board * self, int y)
 
 int board_column_height(struct board * self, int x)
 {
-    int max_height = 0;
-
-    for (int y = 0; y < self->height; y++) {
+    for (int y = self->height - 1; y >= 0; y--) {
         if (board_is_occupied(self, x, y)) {
-            max_height = y + 1;
+            return y + 1;
         }
     }
 
-    return max_height;
+    return 0;
 }
 
 int _minv(int vals[], int len)
@@ -171,10 +177,20 @@ int board_collission_height(struct board * self, struct piece * piece, int x)
     return self->height - min;
 }
 
-void board_place_piece(struct board * self, struct piece * piece, int x, int y)
+void board_place_piece(struct board * self, struct piece * piece, int x, int y, int update_ghosts)
 {
+    if (update_ghosts) {
+        self->ghost_min_x_prev = self->ghost_min_x;
+        self->ghost_max_x_prev = self->ghost_max_x;
+
+        self->ghost_min_x = x - (x > 0 ? 1 : 0);
+        self->ghost_max_x = x + piece_width(piece);
+    }
+
     for (int i = 0; i < 4; i++) {
-        board_set(self, piece->data[i * 2] + x, piece->data[i * 2 + 1] + y,
-                BOARD_BLOCK_GHOST);
+        int piece_x = self->ghosts[i * 2] = piece->data[i * 2] + x;
+        int piece_y = self->ghosts[i * 2 + 1] = piece->data[i * 2 + 1] + y;
+
+        board_set(self, piece_x, piece_y, BOARD_BLOCK_GHOST);
     }
 }

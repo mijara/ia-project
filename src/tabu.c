@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "tabu_list.h"
+#include "limits.h"
 
 struct tabu * tabu_new(tabu_eval evaluate, tabu_mov movement, tabu_stop stop)
 {
@@ -25,7 +26,7 @@ int _best_neighbour(struct tabu * self, int state[], int best_neighbour[], int l
         struct tabu_list * tabu_list)
 {
     int i = 0;
-    int best_fitness = 0;
+    int best_fitness = INT_MIN;
 
     int buffer[len];
 
@@ -39,9 +40,8 @@ int _best_neighbour(struct tabu * self, int state[], int best_neighbour[], int l
         }
 
         if (fitness >= best_fitness) {
+            // printf("  new best\n");
             best_fitness = fitness;
-            // printf("  new best.\n");
-
             memcpy(best_neighbour, buffer, len * sizeof(int));
         }
     }
@@ -49,7 +49,7 @@ int _best_neighbour(struct tabu * self, int state[], int best_neighbour[], int l
     return best_fitness;
 }
 
-int execute(struct tabu * self, int state[], int buffer[], int state_len, 
+int tabu_execute(struct tabu * self, int state[], int buffer[], int state_len, 
         int tabu_size)
 {
     struct tabu_list * tabu_list = tabu_list_new(tabu_size, state_len);
@@ -62,6 +62,7 @@ int execute(struct tabu * self, int state[], int buffer[], int state_len,
     while (!self->stop(i++)) {
         // find best neightbour and set as the new state.
         int best_neighbour[state_len];
+
         int fitness = _best_neighbour(self, state, best_neighbour, state_len, 
                 tabu_list);
         memcpy(state, best_neighbour, state_len * sizeof(int));
@@ -75,8 +76,10 @@ int execute(struct tabu * self, int state[], int buffer[], int state_len,
             best_fitness = fitness;
             memcpy(best_solution, best_neighbour, state_len * sizeof(int));
         }
-        
-        // printf("weights: %d, %d, %d, %d, %d, %d\n", best_solution[0], best_solution[1], best_solution[2], best_solution[3], best_solution[4], best_solution[5]);
+
+        printf("iteration %d:\n", i);
+        printf("  weights: %d, %d, %d, %d, %d, %d\n", best_neighbour[0], best_neighbour[1], best_neighbour[2], best_neighbour[3], best_neighbour[4], best_neighbour[5]);
+        printf("  lines cleared: %d\n", best_fitness);
     }
 
     memcpy(buffer, best_solution, state_len * sizeof(int));

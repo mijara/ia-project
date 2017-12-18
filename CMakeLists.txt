@@ -6,6 +6,8 @@ project (Tetris)
 
 include_directories(include)
 
+add_definitions(-DKEEP_LINES)
+
 set(SOURCE_FILES
     src/board.c
     src/tabu.c

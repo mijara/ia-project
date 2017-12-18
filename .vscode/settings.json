@@ -4,6 +4,8 @@
         "stdlib.h": "c",
         "feature.h": "c",
         "tabu_list.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "piece.h": "c",
+        "tabu.h": "c"
     }
 }

@@ -18,6 +18,6 @@ struct tabu * tabu_new(tabu_eval evaluate, tabu_mov movement, tabu_stop stop);
 
 void tabu_free(struct tabu ** self);
 
-int execute(struct tabu * self, int initial[], int buffer[], int state_len, int tabu_size);
+int tabu_execute(struct tabu * self, int initial[], int buffer[], int state_len, int tabu_size);
 
 #endif // TABU_H

@@ -46,6 +46,10 @@ int evaluate(int state[], int len)
 
     struct piece * piece;
     for (int p = 0; p < input->n_pieces; p++) {
+        int msec = 0;
+        clock_t before = clock();
+
+        // printf("p: %d\n", p);
         int type = input->pieces[p];
 
         piece = piece_new(type);
@@ -66,7 +70,7 @@ int evaluate(int state[], int len)
                     continue;
                 }
 
-                board_place_piece(board, piece, x, y);
+                board_place_piece(board, piece, x, y, 1);
 
                 // calculate fitness of the board.
                 int fitness = evaluate_board(board, state, len);
@@ -89,7 +93,7 @@ int evaluate(int state[], int len)
             // new state.
             piece = piece_new_with_rotation(type, best_rotation);
             int y = board_collission_height(board, piece, best_position);
-            board_place_piece(board, piece, best_position, y);
+            board_place_piece(board, piece, best_position, y, 0);
             lines_filled += board_embrace_ghosts(board);
             piece_free(&piece);
         } else {
@@ -97,8 +101,20 @@ int evaluate(int state[], int len)
             // without overflowing the board, terminate.
             break;
         }
+
+        clock_t difference = clock() - before;
+        msec = difference * 1000 / CLOCKS_PER_SEC;
+
+        // printf("%d milliseconds\n", msec);
     }
 
+    #ifdef KEEP_LINES
+    lines_filled = 0;
+    for (int y = 0; y < board->height; y++) {
+        lines_filled += board_is_row_filled(board, y);
+    }
+    #endif
+    
     board_free(&board);
 
     return lines_filled;
@@ -106,7 +122,6 @@ int evaluate(int state[], int len)
 
 int stop(int iterations)
 {
-    printf("iteration %d.\n", iterations + 1);
     return iterations >= 20 - 1;
 }
 
@@ -123,10 +138,11 @@ int main(int argc, char * argv[])
 
     struct tabu * tabu = tabu_new(evaluate, movement, stop);
 
-    int best_fitness = execute(tabu, initial, solution, 6, 5);
+    int best_fitness = tabu_execute(tabu, initial, solution, 6, 5);
 
-    printf("lines cleared: %d\n", best_fitness);
-    printf("weights: %d, %d, %d, %d, %d, %d\n", solution[0], solution[1], solution[2], solution[3], solution[4], solution[5]);
+    printf("\n\nresults:\n");
+    printf("  lines cleared: %d\n", best_fitness);
+    printf("  weights: %d, %d, %d, %d, %d, %d\n", solution[0], solution[1], solution[2], solution[3], solution[4], solution[5]);
 
     tabu_free(&tabu);
     input_free(&input);
