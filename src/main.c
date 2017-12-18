@@ -39,17 +39,27 @@ int movement(int state[], int buffer[], int len, int i)
     return 1;
 }
 
-int evaluate(int state[], int len)
+int generate_board(struct board * board, int state[], int len)
 {
-    struct board * board = board_new(input->width, input->height);
+    // this program is just pseudo random, since the seed is actually the same everytime.
+    srand(2);
+
     int lines_filled = 0;
+
+    #ifdef PERFORMANCE_METER
+    int msec = 0;
+    clock_t before = clock();
+    #endif
 
     struct piece * piece;
     for (int p = 0; p < input->n_pieces; p++) {
-        int msec = 0;
-        clock_t before = clock();
+        #ifdef PERFORMANCE_METER
+        if (p % 25 == 0) {
+            msec = 0;
+            before = clock();
+        }
+        #endif
 
-        // printf("p: %d\n", p);
         int type = input->pieces[p];
 
         piece = piece_new(type);
@@ -94,7 +104,9 @@ int evaluate(int state[], int len)
             piece = piece_new_with_rotation(type, best_rotation);
             int y = board_collission_height(board, piece, best_position);
             board_place_piece(board, piece, best_position, y, 0);
+
             lines_filled += board_embrace_ghosts(board);
+
             piece_free(&piece);
         } else {
             // in this case we didn't found any place to put the piece
@@ -102,11 +114,23 @@ int evaluate(int state[], int len)
             break;
         }
 
-        clock_t difference = clock() - before;
-        msec = difference * 1000 / CLOCKS_PER_SEC;
-
-        // printf("%d milliseconds\n", msec);
+        #ifdef PERFORMANCE_METER
+        if (p % 25 == 24) {
+            clock_t difference = clock() - before;
+            msec = difference * 1000 / CLOCKS_PER_SEC;
+            printf("  -> %f mspp (prove of 25)\n", (float) msec / 25);
+        }
+        #endif
     }
+
+    return lines_filled;
+}
+
+int evaluate(int state[], int len)
+{
+    struct board * board = board_new(input->width, input->height);
+    
+    int lines_filled = generate_board(board, state, len);
 
     #ifdef KEEP_LINES
     lines_filled = 0;
@@ -114,7 +138,7 @@ int evaluate(int state[], int len)
         lines_filled += board_is_row_filled(board, y);
     }
     #endif
-    
+
     board_free(&board);
 
     return lines_filled;
@@ -127,23 +151,27 @@ int stop(int iterations)
 
 int main(int argc, char * argv[])
 {
-    // this program is just pseudo random, since the seed is actually the same everytime.
-    srand(1);
-
     input = input_read(argv[1]);
 
     // tabu search usage.
     int initial[6] = { 0, 0, 0, 0, 0, 0 };
     int solution[6];
 
+    // a tabu search framework was developed for this program in order to
+    // improve modularity of the program. More information can be found
+    // in the tabu.h header file.
     struct tabu * tabu = tabu_new(evaluate, movement, stop);
-
     int best_fitness = tabu_execute(tabu, initial, solution, 6, 5);
 
     printf("\n\nresults:\n");
     printf("  lines cleared: %d\n", best_fitness);
     printf("  weights: %d, %d, %d, %d, %d, %d\n", solution[0], solution[1], solution[2], solution[3], solution[4], solution[5]);
 
+    struct board * board = board_new(input->width, input->height);
+    generate_board(board, solution, 6);
+    board_dump(board);
+
+    board_free(&board);
     tabu_free(&tabu);
     input_free(&input);
 

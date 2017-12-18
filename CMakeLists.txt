@@ -6,7 +6,15 @@ project (Tetris)
 
 include_directories(include)
 
+# Compile with a version that keeps lines in the board. Otherwise it will
+# delete them.
 add_definitions(-DKEEP_LINES)
+
+# Apply optimizations for faster performance.
+add_definitions(-DOPTIMIZATIONS)
+
+# Meter the performance of the program.
+# add_definitions(-DPERFORMANCE_METER)
 
 set(SOURCE_FILES
     src/board.c

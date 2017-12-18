@@ -8,11 +8,9 @@
 struct tabu * tabu_new(tabu_eval evaluate, tabu_mov movement, tabu_stop stop)
 {
     struct tabu * self = malloc(sizeof(struct tabu)); 
-    
     self->evaluate = evaluate;
     self->movement = movement;
     self->stop = stop;
-    
     return self;
 }
 
@@ -27,20 +25,20 @@ int _best_neighbour(struct tabu * self, int state[], int best_neighbour[], int l
 {
     int i = 0;
     int best_fitness = INT_MIN;
-
     int buffer[len];
 
+    // out of all neighbours, find the best one.
     while (self->movement(state, buffer, len, i++)) {
+        // call the user evaluation function.
         int fitness = self->evaluate(buffer, len);
-        // printf("fitness: %d\n", fitness);
 
+        // ignore the neighbour if it collides with the tabu list.
         if (tabu_list_contains(tabu_list, buffer)) {
-            // printf("  ignored\n");
             continue;
         }
 
+        // if this is the best fitness yet, store it.
         if (fitness >= best_fitness) {
-            // printf("  new best\n");
             best_fitness = fitness;
             memcpy(best_neighbour, buffer, len * sizeof(int));
         }
@@ -56,6 +54,7 @@ int tabu_execute(struct tabu * self, int state[], int buffer[], int state_len,
 
     int best_solution[state_len];
     memcpy(best_solution, state, state_len * sizeof(int));
+
     int best_fitness = self->evaluate(state, state_len);
 
     int i = 0;
@@ -78,12 +77,13 @@ int tabu_execute(struct tabu * self, int state[], int buffer[], int state_len,
         }
 
         printf("iteration %d:\n", i);
-        printf("  weights: %d, %d, %d, %d, %d, %d\n", best_neighbour[0], best_neighbour[1], best_neighbour[2], best_neighbour[3], best_neighbour[4], best_neighbour[5]);
+        printf("  weights: %d, %d, %d, %d, %d, %d\n", best_neighbour[0], 
+                best_neighbour[1], best_neighbour[2], best_neighbour[3], 
+                best_neighbour[4], best_neighbour[5]);
         printf("  lines cleared: %d\n", best_fitness);
     }
 
     memcpy(buffer, best_solution, state_len * sizeof(int));
-
     tabu_list_free(&tabu_list);
 
     return best_fitness;

@@ -18,6 +18,10 @@ struct board
     int ghost_max_x_prev;
     int ghost_min_x;
     int ghost_max_x;
+    int ghost_min_y_prev;
+    int ghost_max_y_prev;
+    int ghost_min_y;
+    int ghost_max_y;
     int ghosts[8];
 
     int blocks[];

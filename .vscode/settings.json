@@ -6,6 +6,7 @@
         "tabu_list.h": "c",
         "stdio.h": "c",
         "piece.h": "c",
-        "tabu.h": "c"
+        "tabu.h": "c",
+        "features.h": "c"
     }
 }

@@ -17,6 +17,10 @@ struct board * board_new(int width, int height)
     self->ghost_max_x_prev = 0;
     self->ghost_min_x = 0;
     self->ghost_max_x = 0;
+    self->ghost_min_y_prev = 0;
+    self->ghost_max_y_prev = 0;
+    self->ghost_min_y = 0;
+    self->ghost_max_y = 0;
     self->uid = id++;
 
     for (int x = 0; x < width; x++) {
@@ -185,6 +189,12 @@ void board_place_piece(struct board * self, struct piece * piece, int x, int y, 
 
         self->ghost_min_x = x - (x > 0 ? 1 : 0);
         self->ghost_max_x = x + piece_width(piece);
+
+        self->ghost_min_y_prev = self->ghost_min_y;
+        self->ghost_max_y_prev = self->ghost_max_y;
+
+        self->ghost_min_y = y - (y > 0 ? 1 : 0);
+        self->ghost_max_y = y + piece_height(piece);
     }
 
     for (int i = 0; i < 4; i++) {
