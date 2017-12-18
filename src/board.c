@@ -65,7 +65,7 @@ inline int board_is_occupied(struct board * self, int x, int y)
 void board_dump(struct board * self)
 {
     for (int y = self->height - 1; y >= 0; y--) {
-        printf("|");
+        printf("    |");
         for (int x = 0; x < self->width; x++) {
             int v = board_get(self, x, y);
             if (v == 0) {

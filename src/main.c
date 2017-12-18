@@ -146,7 +146,7 @@ int evaluate(int state[], int len)
 
 int stop(int iterations)
 {
-    return iterations >= 20 - 1;
+    return iterations >= 10;
 }
 
 int main(int argc, char * argv[])
@@ -161,15 +161,28 @@ int main(int argc, char * argv[])
     // improve modularity of the program. More information can be found
     // in the tabu.h header file.
     struct tabu * tabu = tabu_new(evaluate, movement, stop);
+
+    clock_t before = clock();
     int best_fitness = tabu_execute(tabu, initial, solution, 6, 5);
+    clock_t difference = clock() - before;
+    int msec = difference * 1000 / CLOCKS_PER_SEC;
 
     printf("\n\nresults:\n");
-    printf("  lines cleared: %d\n", best_fitness);
-    printf("  weights: %d, %d, %d, %d, %d, %d\n", solution[0], solution[1], solution[2], solution[3], solution[4], solution[5]);
+    printf("  full lines: %d\n", best_fitness);
+    printf("  weights:    %d, %d, %d, %d, %d, %d\n", solution[0], solution[1], 
+            solution[2], solution[3], solution[4], solution[5]);
+    printf("  time:       %dms\n", msec);
 
+    printf("  generated board:\n");
     struct board * board = board_new(input->width, input->height);
     generate_board(board, solution, 6);
     board_dump(board);
+
+    #ifdef LATEX_OUTPUT
+    printf("%d & %d & %d & %d, %d, %d, %d, %d, %d & %d & %d \\\\\n", input->width, 
+            input->height, input->n_pieces, solution[0], solution[1], 
+            solution[2], solution[3], solution[4], solution[5], best_fitness, msec);
+    #endif
 
     board_free(&board);
     tabu_free(&tabu);

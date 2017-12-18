@@ -16,6 +16,8 @@ add_definitions(-DOPTIMIZATIONS)
 # Meter the performance of the program.
 # add_definitions(-DPERFORMANCE_METER)
 
+# add_definitions(-DLATEX_OUTPUT)
+
 set(SOURCE_FILES
     src/board.c
     src/tabu.c
