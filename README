@@ -1,0 +1,45 @@
+Tetris Problem using Tabu Search
+================================
+
+Compilación
+-----------
+Para la compilación en general se usa CMake, sin embargo para no requerir
+instalación de este por parte del usuario se distribuye un Makefile para
+linux.
+
+# Linux:
+    cd linux
+    make
+
+Los anteriores pasos fueron probados en el ambiente de Linux y también en
+un contenedor Docker CentOS.
+
+# MacOS:
+En caso de usar MacOS se asume instalado CMake.
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+Ejecución
+---------
+Dentro de la carpeta [build|linux] ejecutar:
+
+    ./Tetris <instancia>
+
+Por ejemplo:
+
+    ./Tetris ../instances/15_20_1200.txt
+
+Output
+------
+El output indicará la solución actual y su mejor resultado por cada iteración,
+para finalizar la mejor solución de la forma:
+
+results:
+  full lines: 17
+  weights:    -5, 0, -15, -5, -20, -5
+  time:       630ms
+  generated board:
+    [tablero generado]

@@ -1,3 +1,0 @@
-/home/mijara/ia-project/linux/CMakeFiles/rebuild_cache.dir
-/home/mijara/ia-project/linux/CMakeFiles/Tetris.dir
-/home/mijara/ia-project/linux/CMakeFiles/edit_cache.dir

@@ -1,1 +1,0 @@
-/usr/lib64/ccache/cc   -rdynamic CMakeFiles/Tetris.dir/src/main.c.o CMakeFiles/Tetris.dir/src/board.c.o CMakeFiles/Tetris.dir/src/tabu.c.o CMakeFiles/Tetris.dir/src/tabu_list.c.o CMakeFiles/Tetris.dir/src/features.c.o CMakeFiles/Tetris.dir/src/piece.c.o CMakeFiles/Tetris.dir/src/input.c.o  -o Tetris 
