@@ -5,9 +5,10 @@
 
 #include "board.h"
 #include "tabu.h"
-#include "features.h"
 #include "piece.h"
 #include "input.h"
+
+#include "features.c"
 
 #define DEBUG
 

@@ -1,5 +1,3 @@
-#include "features.h"
-
 static int _last_id = -1;
 
 static int _holes[512] = { -1 };

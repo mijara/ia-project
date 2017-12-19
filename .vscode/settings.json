@@ -7,6 +7,7 @@
         "stdio.h": "c",
         "piece.h": "c",
         "tabu.h": "c",
-        "features.h": "c"
+        "features.h": "c",
+        "input.h": "c"
     }
 }

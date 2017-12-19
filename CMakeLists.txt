@@ -22,7 +22,6 @@ set(SOURCE_FILES
     src/board.c
     src/tabu.c
     src/tabu_list.c
-    src/features.c
     src/piece.c
     src/input.c
 )
